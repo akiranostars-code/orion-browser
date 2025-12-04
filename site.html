@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orion Browser</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/orion-start.css">
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .orion-logo-small {
+             width: 24px;
+            height: 24px;
+            filter: drop-shadow(0 0 5px rgba(77, 171, 247, 0.5));
+        }
+        .context-menu {
+            position: fixed;
+            background: linear-gradient(135deg, #1a1a3e 0%, #252552 100%);
+            border: 1px solid rgba(77, 171, 247, 0.3);
+            border-radius: 8px;
+            padding: 8px 0;
+            min-width: 200px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            z-index: 1001;
+        }
+         .menu-item {
+            padding: 10px 20px;
+            color: #e0e0e0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+         .menu-item:hover {
+            background: rgba(77, 171, 247, 0.2);
+        }
+        
+        .menu-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
+        }
+    </style>
+    </head>
+<body>
+    <div class="browser-container">
+        <header class="title-bar">
+            <div class="window-controls">
+                <button class="control-btn close" id="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+                <button class="control-btn minimize" id="minimize-btn">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="control-btn maximize" id="maximize-btn">
+                    <i class="fas fa-square"></i>
+                </button>
+            </div>
+            <div class="browser-title">
+                <img src="https://i.pinimg.com/736x/9c/ba/00/9cba003b9a1a459689808f89e5a769d9.jpg" alt="Orion Logo" class="orion-logo-small">
+                <span>Orion Browser</span>
+            </div>
+            <div class="title-bar-actions">
+                 <div class="title-bar-actions">
+                <button id="theme-toggle" class="icon-btn">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="orion-services" class="icon-btn" title="Serviços Orion">
+                    <i class="fas fa-rocket"></i>
+                </button>
+            </div>
+        </header>
+        <nav class="navigation-bar">
+            <div class="nav-controls">
+                <button id="back-btn" class="nav-btn" title="Voltar">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <button id="forward-btn" class="nav-btn" title="Avançar">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button id="reload-btn" class="nav-btn" title="Recarregar">
+                    <i class="fas fa-redo"></i>
+                </button>
+                <button id="home-btn" class="nav-btn" title="Página Inicial">
+                    <i class="fas fa-home"></i>
+                </button>
+            </div>
+            <div class="url-bar-container">
+                <div class="security-indicator" id="security-indicator">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <input type="text" id="url-bar" class="url-bar" 
+                       placeholder="Pesquisar com Orion Search ou digitar URL" 
+                       value="orion://start">
+                <button id="go-btn" class="go-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="nav-actions">
+                <button id="bookmarks-btn" class="nav-btn" title="Favoritos">
+                    <i class="fas fa-star"></i>
+                </button>
+                <buttom id="dowloads-btn" class="nav-btn" title="Dowloads">
+                    <i class="fas fa-dowloads"></i>
+                </buttom>
+                <button id="orion-menu" class="nav-btn" title="Menu Orion">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        </nav>
+         <div class="tabs-container">
+            <div class="tabs-list" id="tabs-list">
+                </div>
+            <button id="new-tab-btn" class="new-tab-btn" title="Nova Aba">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+         <div class="content-area">
+            <iframe id="browser-view" class="browser-view" 
+                    src="pages/start.html"
+                    sandbox="allow-same-origin allow-scripts allow-forms"
+                    allow="geolocation">
+            </iframe>
+            <div class="erro-page" id="erro-page">
+                <div class="erro-content">
+                    <div class="erro-logo">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <h1> Navegação Orion</h1>
+                    <p id="erro-massage"> Carregando serviços Orion...</p>
+                    <div class="error-actions">
+                        <button id="retry-btn" class="orion-btn">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button id="orion-star-btn" class="orion-btn secondary">
+                            <i class="fas fa-home"></i> Página inícial
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <footer class="status-bar">
+                <div class="status-info">
+                    <span id="page-status">Conectando a rede Orion</span>
+                </div>
+                <div class="status-indicators">
+                    <span id="security-status" class="security-status">
+                        <i class="fas fa-shield-alt"></i> Proteção Orion ativa
+                    </span>
+                    <span id="conection-status" class="conection-status">
+                        <i class="fas fa-wifi"></i> Online
+                    </span>
+                    <span id="zoom-level" class="zoom-level">100%</span>
+                </div>
+            </footer>
+            <div class="modal" id="orion-services-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                          <h3><i class="fas fa-rocket"></i> Serviços Orion</h3>
+                          <button class="close-modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="services-grid">
+                            <div class="service-card" data-service="orion://start">
+                                <div class="service-icon">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <h4> Página Inicial</h4>
+                                <p>Dashboard personalizado</p>
+                            </div>
+                            <div class="service-card" data-service="orion://start">
+                                <div class="service-icon">
+                                    <div class="service-card" data-service="orion://search">
+                            <div class="service-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h4>Orion Search</h4>
+                            <p>Busca privada e rápida</p>
+                        </div>
+                        <div class="service-card" data-service="orion://mail">
+                            <div class="service-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h4>Orion Mail</h4>
+                            <p>Email seguro e privado</p>
+                        </div>
+                        <div class="service-card" data-service="orion://drive">
+                            <div class="service-icon">
+                                <i class="fas fa-cloud"></i>
+                                </div>
+                            <h4>Orion Drive</h4>
+                            <p>Armazenamento em nuvem</p>
+                        </div>
+                        <div class="service-card" data-service="orion://maps">
+                            <div class="service-icon">
+                                <i class="fas fa-map"></i>
+                            </div>
+                            <h4>Orion Maps</h4>
+                            <p>Navegação e mapas</p>
+                        </div>
+                        <div class="service-card" data-service="orion://video">
+                            <div class="service-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <h4>Orion Video</h4>
+                            <p>Plataforma de vídeos</p>
+                             </div>
+                        <div class="service-card" data-service="orion://news">
+                            <div class="service-icon">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <h4>Orion News</h4>
+                            <p>Notícias e artigos</p>
+                        </div>
+                        <div class="service-card" data-service="orion://settings">
+                            <div class="service-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <h4>Configurações</h4>
+                            <p>Personalize seu navegador</p>
+                              </div>
+                        <div class="service-card" data-service="orion://about">
+                            <div class="service-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <h4>Sobre o Orion</h4>
+                            <p>Conheça nosso projeto</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="downloads-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-download"></i> Downloads</h3>
+                    <button class="close-modal">&times;</button>
+                      </div>
+                <div class="modal-body">
+                    <div id="downloads-list">
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="bookmarks-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-star"></i> Favoritos</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <ul id="bookmarks-list">
+                        <!-- Favoritos serão carregados aqui -->
+                    </ul>
+                    <div class="add-bookmark">
+                        <input type="text" id="new-bookmark-title" placeholder="Título do favorito">
+                        <input type="text" id="new-bookmark-url" placeholder="URL (ex: https://...)">
+                        <button id="add-bookmark-btn" class="orion-btn">
+                            <i class="fas fa-plus"></i> Adicionar
+                             </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/orion-services.js"></script>
+    <script src="js/tabs.js"></script>
+    <script src="js/browser.js"></script>
+    <script src="js/security.js"></script>
+    <script src="js/orion-search.js"></script>
+    <script src="js/orion-start.js"></script>
+</body>
+</html>
